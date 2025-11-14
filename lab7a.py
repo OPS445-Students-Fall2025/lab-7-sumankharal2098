@@ -15,18 +15,24 @@ def format_time(t):
     return f'{t.hour:02d}:{t.minute:02d}:{t.second:02d}'
 
 def sum_times(t1, t2):
-    """Add two time objests and return the sum."""
-    sum = Time(0,0,0)
-    sum.hour = t1.hour + t2.hour
-    sum.minute = t1.minute + t2.minute
-    sum.second = t1.second + t2.second
-    return sum
+    """Add two time objects and return the sum as a Time object"""
+    sum_time = Time()
+    
+    # Add hours, minutes, seconds
+    sum_time.second = t1.second + t2.second
+    sum_time.minute = t1.minute + t2.minute
+    sum_time.hour   = t1.hour + t2.hour
 
-def valid_time(t):
-    """check for the validity of the time object attributes:
-        24 > hour > 0, 60 > minute > 0, 60 > second > 0 """
-    if t.hour < 0 or t.minute < 0 or t.second < 0:
-        return False
-    if t.minute >= 60 or t.second >= 60 or t.hour >= 24:
-        return False
-    return True
+    # Normalize seconds to minutes
+    sum_time.minute += sum_time.second // 60
+    sum_time.second = sum_time.second % 60
+
+    # Normalize minutes to hours
+    sum_time.hour += sum_time.minute // 60
+    sum_time.minute = sum_time.minute % 60
+
+    # If you want to stay within 24 hours (optional)
+    sum_time.hour = sum_time.hour % 24
+
+    return sum_time
+
